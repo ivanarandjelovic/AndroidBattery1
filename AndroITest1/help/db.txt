@@ -1,3 +1,8 @@
+console:
+
+./adb -s emulator-5554 shell
+(in platform-tools)
+
 DB path:
 
 sqlite3 /data/data/org.aivan.androitest1/databases/historyDB
