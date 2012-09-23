@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -97,6 +98,21 @@ public class MainActivity extends Activity {
     // TODO Auto-generated method stub
     super.onResume();
     Log.d(className, "onResume called");
+    
+    refreshServiceRunningStatus();
+  }
+
+  private void refreshServiceRunningStatus() {
+    boolean serviceRunning = ServiceTools.isServiceRunning(this, "org.aivan.androitest1.IvanService");
+    
+    TextView textView = (TextView) findViewById(R.id.textView1);
+    textView.setText("Service is "+(serviceRunning ? "" : "not ")+" running");
+    
+    Button startServiceButton = (Button) findViewById(R.id.startService);
+    Button stopServiceButton = (Button) findViewById(R.id.stopService);
+    
+    startServiceButton.setEnabled((serviceRunning ? false : true));
+    stopServiceButton.setEnabled(!startServiceButton.isEnabled());
   }
 
   /*
@@ -137,6 +153,8 @@ public class MainActivity extends Activity {
 
     Intent intent = new Intent(this, IvanService.class);
     startService(intent);
+    
+    refreshServiceRunningStatus();
   }
 
   public void stopService(View view) {
@@ -145,5 +163,7 @@ public class MainActivity extends Activity {
 
     Intent intent = new Intent(this, IvanService.class);
     stopService(intent);
+    
+    refreshServiceRunningStatus();
   }
 }

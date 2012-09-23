@@ -2,13 +2,18 @@ package org.aivan.androitest1;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class HistoryDAO {
+  
+  private static final String LOG_TAG = HistoryDAO.class.getName();
   
   Context context = null;
   HistoryDBOpenerHelper dbHelper = null;
@@ -42,6 +47,9 @@ public class HistoryDAO {
     
     //result = "Test one\ntest 2\n test3";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    sdf.setTimeZone(TimeZone.getDefault());
+    
+    //Log.d(LOG_TAG,"Default timezone is "+TimeZone.getDefault().getDisplayName());
     
     SQLiteDatabase histDB = dbHelper.getReadableDatabase();
     Cursor cursor = histDB.query("history", HistoryDBOpenerHelper.columns, "", null, null, null, HistoryDBOpenerHelper.COLUMN_DATE + " desc",""+recordCount); 
@@ -58,6 +66,10 @@ public class HistoryDAO {
       cursor.close();
     }
     histDB.close();
+    
+    long time = System.currentTimeMillis();
+   // Log.d(LOG_TAG,time+"");
+    //Log.d(LOG_TAG,sdf.format(new Date(time)));
     
     return result;
   }
