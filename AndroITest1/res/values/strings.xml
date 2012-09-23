@@ -1,10 +1,10 @@
 <resources>
 
-    <string name="app_name">AndroITest1</string>
+    <string name="app_name">AndroBat1</string>
     <string name="hello_world">&lt;Place holder&gt;</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_activity2">Activity2</string>
+    <string name="title_activity_main">AndroBat1</string>
+    <string name="title_activity_activity2">Data view</string>
     <string name="open_activity_2">Show latest DB content</string>
 
 </resources>
