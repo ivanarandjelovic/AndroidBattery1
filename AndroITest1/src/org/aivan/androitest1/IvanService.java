@@ -139,16 +139,23 @@ public class IvanService extends Service {
     return super.onUnbind(intent);
   }
 
+  static long lastLevel = Long.MIN_VALUE;
+  
   private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
 
+
+    
     @Override
     public void onReceive(Context context, Intent intent) {
       Log.d("mBatInfoReceiver", "onReceive");
       int level = intent.getIntExtra("level", 0);
       Log.d("mBatInfoReceiver", "level is " + level);
 
-      new HistoryDAO(context).addHistoryRecord(level);
-     
+      if(level != lastLevel) {
+        // Write new battery level only if it has changed since last one written to the database
+        new HistoryDAO(context).addHistoryRecord(level);
+        lastLevel = level;
+      }
       
       // TODO: this is debug stuff
       //Toast.makeText(context, "Added battery level "+level+" into the DB!", Toast.LENGTH_SHORT).show();

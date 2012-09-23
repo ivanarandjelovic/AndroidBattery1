@@ -11,8 +11,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:onClick="exitApp"
-        android:text="Test" />
+        android:onClick="refreshData"
+        android:text="Refresh" />
 
     <TextView
         android:id="@+id/textView2"
