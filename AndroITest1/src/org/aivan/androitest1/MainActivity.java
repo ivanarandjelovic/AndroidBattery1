@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -25,9 +26,9 @@ public class MainActivity extends Activity {
     return true;
   }
 
-  
-  
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
    */
   @Override
@@ -37,7 +38,9 @@ public class MainActivity extends Activity {
     Log.d(className, "onRestoreInstanceState called");
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
    */
   @Override
@@ -81,6 +84,7 @@ public class MainActivity extends Activity {
     // TODO Auto-generated method stub
     super.onRestart();
     Log.d(className, "onRestart called");
+
   }
 
   /*
@@ -118,28 +122,28 @@ public class MainActivity extends Activity {
     super.onStop();
     Log.d(className, "onStop called");
   }
-  
+
   /** Called when the user clicks the Send button */
   public void sendMessage(View view) {
-      // Do something in response to button
+    // Do something in response to button
     Intent intent = new Intent(this, Activity2.class);
     startActivity(intent);
   }
 
   /** Called when the user clicks the Send button */
   public void startService(View view) {
-      // Do something in response to button
+    // Do something in response to button
     Log.d(className, "startService");
-    
+
     Intent intent = new Intent(this, IvanService.class);
     startService(intent);
   }
 
   public void stopService(View view) {
     // Do something in response to button
-  Log.d(className, "stopService");
-  
-  Intent intent = new Intent(this, IvanService.class);
-  stopService(intent);
-}
+    Log.d(className, "stopService");
+
+    Intent intent = new Intent(this, IvanService.class);
+    stopService(intent);
+  }
 }

@@ -7,9 +7,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class HistoryDBOpenerHelper extends SQLiteOpenHelper {
 
+  public static final String COLUMN_DATE = "date";
+  public static final String COLUMN_VALUE = "value";
+  
+  public static final String[] columns = new String[]{ COLUMN_DATE, COLUMN_VALUE};
+
   private static final String DICTIONARY_TABLE_NAME = "history";
-  private static final String DICTIONARY_TABLE_CREATE = "CREATE TABLE " + DICTIONARY_TABLE_NAME + " (" + "date INTEGER, "
-      + "value TEXT);";
+  private static final String DICTIONARY_TABLE_CREATE = "CREATE TABLE " + DICTIONARY_TABLE_NAME + " (" + COLUMN_DATE + " INTEGER, "
+      + COLUMN_VALUE + " TEXT);";
+  
+  
 
   public HistoryDBOpenerHelper(Context context, String name, CursorFactory factory, int version) {
     super(context, name, factory, version);

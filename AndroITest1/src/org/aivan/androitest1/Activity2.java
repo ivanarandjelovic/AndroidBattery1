@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 public class Activity2 extends Activity {
 
@@ -104,4 +106,20 @@ public class Activity2 extends Activity {
       }
     }
   }
+
+  /* (non-Javadoc)
+   * @see android.app.Activity#onResume()
+   */
+  @Override
+  protected void onResume() {
+    // TODO Auto-generated method stub
+    super.onResume();
+
+    TextView view = (TextView) findViewById(R.id.textView2);
+    view.setMovementMethod(new ScrollingMovementMethod());
+    view.setText(new HistoryDAO(this).getLastRecords(500));
+
+  }
+  
+  
 }
