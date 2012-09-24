@@ -2,18 +2,16 @@ package org.aivan.androitest1;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class HistoryDAO {
   
-  private static final String LOG_TAG = HistoryDAO.class.getName();
+  //private static final String LOG_TAG = HistoryDAO.class.getName();
   
   Context context = null;
   HistoryDBOpenerHelper dbHelper = null;
@@ -67,7 +65,7 @@ public class HistoryDAO {
     }
     histDB.close();
     
-    long time = System.currentTimeMillis();
+    //long time = System.currentTimeMillis();
    // Log.d(LOG_TAG,time+"");
     //Log.d(LOG_TAG,sdf.format(new Date(time)));
     
