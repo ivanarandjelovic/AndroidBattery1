@@ -26,10 +26,10 @@ public class HistoryDAO {
 
 
 
-  public void addHistoryRecord(int level) {
+  public void addHistoryRecord(long time, int level) {
     
     ContentValues values = new ContentValues();
-    values.put("date", System.currentTimeMillis());
+    values.put("date", time);
     values.put("value", level);
     SQLiteDatabase histDB = dbHelper.getWritableDatabase();
     histDB.insert("history",null, values);
