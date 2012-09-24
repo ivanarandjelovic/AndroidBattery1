@@ -54,7 +54,7 @@ public class IvanService extends Service {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
-		int icon = R.drawable.ic_stat_batt;
+		int icon = R.drawable.bat_level_list;
 		CharSequence tickerText = null;
 		long when = System.currentTimeMillis();
 
@@ -71,7 +71,7 @@ public class IvanService extends Service {
 				contentIntent);
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		//notification.number = (int) lastLevel;
-		
+		notification.iconLevel = (int) lastLevel;
 
 		mNotificationManager.notify(ANDRO_BAT_ID, notification);
 	}
