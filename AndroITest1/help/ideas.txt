@@ -6,7 +6,7 @@
 - Battery percents do not represent equal "bits" of battery power. We must take care of this.
   IDEA: Maybe we can gather average percent "duration" in separate table, over longer period (two weeks) it should provide relatively
   good idea about how "big" each percent is (at least compared with the others).
-- Complete bat power must be calculated as summary of all 100 percent "bits" and then we deduc duration based on this (and
- all other influecenes, as history average, day of week average, short-term average, etc.)
+- Complete bat power must be calculated as summary of all 100 percent "bits" and then we deduct duration based on this (and
+ all other influences, as history average, day of week average, short-term average, etc.)
  
     
