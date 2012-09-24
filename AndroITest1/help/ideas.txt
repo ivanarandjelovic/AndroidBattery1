@@ -1,0 +1,12 @@
+- Log the range of 1 month or even more, if it prooves to be OK (from the "cpu time / mem space" perspective)
+- Time of day is important
+- Day of week is important
+- Short range consumption might be very important if it is quite different then the average one for the current time of the day,
+ in that case it must influence prediction more then usual
+- Battery percents do not represent equal "bits" of battery power. We must take care of this.
+  IDEA: Maybe we can gather average percent "duration" in separate table, over longer period (two weeks) it should provide relatively
+  good idea about how "big" each percent is (at least compared with the others).
+- Complete bat power must be calculated as summary of all 100 percent "bits" and then we deduc duration based on this (and
+ all other influecenes, as history average, day of week average, short-term average, etc.)
+ 
+    
