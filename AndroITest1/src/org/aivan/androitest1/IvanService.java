@@ -1,166 +1,210 @@
 package org.aivan.androitest1;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 public class IvanService extends Service {
 
-  static final String TAG = IvanService.class.getName();
+	static final String TAG = IvanService.class.getName();
 
-  @Override
-  public IBinder onBind(Intent intent) {
-    // TODO Auto-generated method stub
-    Log.d(TAG, "onBind");
-    return null;
-  }
+	private static final int ANDRO_BAT_ID = 1;
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see android.app.Service#onCreate()
-   */
-  @Override
-  public void onCreate() {
-    // TODO Auto-generated method stub
-    super.onCreate();
-    Log.d(TAG, "onCreate");
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		Log.d(TAG, "onBind");
+		return null;
+	}
 
-    // AlarmManager alarmManager = (AlarmManager)
-    // getSystemService(Context.ALARM_SERVICE);
-    // alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 5000, 10000,
-    // PendingIntent.getService(this, 0 , new Intent(this, IvanService.class),
-    // PendingIntent.FLAG_UPDATE_CURRENT ));
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Service#onCreate()
+	 */
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		super.onCreate();
+		Log.d(TAG, "onCreate");
 
-    registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		// AlarmManager alarmManager = (AlarmManager)
+		// getSystemService(Context.ALARM_SERVICE);
+		// alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 5000, 10000,
+		// PendingIntent.getService(this, 0 , new Intent(this,
+		// IvanService.class),
+		// PendingIntent.FLAG_UPDATE_CURRENT ));
 
-  }
+		registerReceiver(this.mBatInfoReceiver, new IntentFilter(
+				Intent.ACTION_BATTERY_CHANGED));
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see android.app.Service#onStart(android.content.Intent, int)
-   */
-  @Override
-  public void onStart(Intent intent, int startId) {
-    // TODO Auto-generated method stub
-    super.onStart(intent, startId);
+		updateNotificationIcon();
 
-    Log.d(TAG, "onStart");
+	}
 
-  }
+	private void updateNotificationIcon() {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * android.app.Service#onConfigurationChanged(android.content.res.Configuration
-   * )
-   */
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    // TODO Auto-generated method stub
-    super.onConfigurationChanged(newConfig);
-    Log.d(TAG, "onConfigurationChanged");
-  }
+		int icon = R.drawable.ic_stat_batt;
+		CharSequence tickerText = null;
+		long when = System.currentTimeMillis();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see android.app.Service#onDestroy()
-   */
-  @Override
-  public void onDestroy() {
-    // TODO Auto-generated method stub
-    super.onDestroy();
-    Log.d(TAG, "onDestroy");
+		Notification notification = new Notification(icon, tickerText, when);
 
-    // AlarmManager alarmManager = (AlarmManager)
-    // getSystemService(Context.ALARM_SERVICE);
-    // alarmManager.cancel( PendingIntent.getService(this, 0 , new Intent(this,
-    // IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT ));
+		Context context = getApplicationContext();
+		CharSequence contentTitle = getResources().getText(R.string.app_name);
+		CharSequence contentText = "Current battery level: " + lastLevel + " %";;
+		Intent notificationIntent = new Intent(this, MainActivity.class);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+				notificationIntent, 0);
 
-    unregisterReceiver(this.mBatInfoReceiver);
-  }
+		notification.setLatestEventInfo(context, contentTitle, contentText,
+				contentIntent);
+		notification.flags |= Notification.FLAG_ONGOING_EVENT;
+		//notification.number = (int) lastLevel;
+		
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see android.app.Service#onLowMemory()
-   */
-  @Override
-  public void onLowMemory() {
-    // TODO Auto-generated method stub
-    super.onLowMemory();
-    Log.d(TAG, "onLowMemory");
-  }
+		mNotificationManager.notify(ANDRO_BAT_ID, notification);
+	}
+	
+	private void cancelNotificationIcon() {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+		mNotificationManager.cancelAll();
+	}
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see android.app.Service#onRebind(android.content.Intent)
-   */
-  @Override
-  public void onRebind(Intent intent) {
-    // TODO Auto-generated method stub
-    super.onRebind(intent);
-    Log.d(TAG, "onRebind");
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Service#onStart(android.content.Intent, int)
+	 */
+	@Override
+	public void onStart(Intent intent, int startId) {
+		// TODO Auto-generated method stub
+		super.onStart(intent, startId);
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see android.app.Service#onStartCommand(android.content.Intent, int, int)
-   */
-  @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    // TODO Auto-generated method stub
-    Log.d(TAG, "onStartCommand");
-    return super.onStartCommand(intent, flags, startId);
-  }
+		Log.d(TAG, "onStart");
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see android.app.Service#onUnbind(android.content.Intent)
-   */
-  @Override
-  public boolean onUnbind(Intent intent) {
-    // TODO Auto-generated method stub
-    Log.d(TAG, "onUnbind");
-    return super.onUnbind(intent);
-  }
+	}
 
-  static long lastLevel = Long.MIN_VALUE;
-  
-  private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.app.Service#onConfigurationChanged(android.content.res.Configuration
+	 * )
+	 */
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+		Log.d(TAG, "onConfigurationChanged");
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Service#onDestroy()
+	 */
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.d(TAG, "onDestroy");
 
-    
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      Log.d("mBatInfoReceiver", "onReceive");
-      int level = intent.getIntExtra("level", 0);
-      Log.d("mBatInfoReceiver", "level is " + level);
+		// AlarmManager alarmManager = (AlarmManager)
+		// getSystemService(Context.ALARM_SERVICE);
+		// alarmManager.cancel( PendingIntent.getService(this, 0 , new
+		// Intent(this,
+		// IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT ));
 
-      if(level != lastLevel) {
-        // Write new battery level only if it has changed since last one written to the database
-        new HistoryDAO(context).addHistoryRecord(level);
-        lastLevel = level;
-      }
-      
-      // TODO: this is debug stuff
-      //Toast.makeText(context, "Added battery level "+level+" into the DB!", Toast.LENGTH_SHORT).show();
-      
-    }
-  };
+		cancelNotificationIcon();
+		
+		unregisterReceiver(this.mBatInfoReceiver);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Service#onLowMemory()
+	 */
+	@Override
+	public void onLowMemory() {
+		// TODO Auto-generated method stub
+		super.onLowMemory();
+		Log.d(TAG, "onLowMemory");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Service#onRebind(android.content.Intent)
+	 */
+	@Override
+	public void onRebind(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onRebind(intent);
+		Log.d(TAG, "onRebind");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Service#onStartCommand(android.content.Intent, int, int)
+	 */
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		// TODO Auto-generated method stub
+		Log.d(TAG, "onStartCommand");
+		return super.onStartCommand(intent, flags, startId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Service#onUnbind(android.content.Intent)
+	 */
+	@Override
+	public boolean onUnbind(Intent intent) {
+		// TODO Auto-generated method stub
+		Log.d(TAG, "onUnbind");
+		return super.onUnbind(intent);
+	}
+
+	static long lastLevel = Long.MIN_VALUE;
+
+	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("mBatInfoReceiver", "onReceive");
+			int level = intent.getIntExtra("level", 0);
+			Log.d("mBatInfoReceiver", "level is " + level);
+
+			if (level != lastLevel) {
+				// Write new battery level only if it has changed since last one
+				// written to the database
+				new HistoryDAO(context).addHistoryRecord(level);
+				lastLevel = level;
+				
+				updateNotificationIcon();
+			}
+
+			// TODO: this is debug stuff
+			// Toast.makeText(context,
+			// "Added battery level "+level+" into the DB!",
+			// Toast.LENGTH_SHORT).show();
+
+		}
+	};
 
 }
