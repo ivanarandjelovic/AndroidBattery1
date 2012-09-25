@@ -99,6 +99,9 @@ public class HistoryDAO {
 						+ (System.currentTimeMillis() - (AndroBatConfiguration.MAX_DAYS_IN_HISTORY * 24 * 60 * 60 * 1000))
 						+ ")", null);
 		Log.d(LOG_TAG, "Rows deleted :"+rowsDeleted);
+		
+		// TODO: COmplete date cleanup here (removing duplicates)
+		
 		histDB.close();
 
 	}
