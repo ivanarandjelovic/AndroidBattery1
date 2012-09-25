@@ -3,43 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
- 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="72dp"
-        android:text="@string/open_activity_2"
-        android:onClick="sendMessage"  />
-
-    <Button
-        android:id="@+id/stopService"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
-        android:text="Stop Service"
-        android:onClick="stopService" />
+        android:layout_marginTop="14dp"
+        android:onClick="sendMessage"
+        android:text="@string/open_activity_2" />
 
     <Button
         android:id="@+id/startService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/stopService"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="20dp"
-        android:text="Start Service" 
-        android:onClick="startService"/>
+        android:layout_below="@id/button1"
+        android:layout_centerHorizontal="true"
+        android:onClick="startService"
+        android:text="Start Service" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startService"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="false"
+        android:text="@string/hello_world"
+        tools:context=".MainActivity" />
+
+    <Button
+        android:id="@+id/stopService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/startService"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="15dp"
+        android:onClick="stopService"
+        android:text="Stop Service" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/stopService"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="false"
+        android:onClick="dataCleanup"
+        android:text="Perform data cleanup (remove duplicates)" />
 
 </RelativeLayout>
