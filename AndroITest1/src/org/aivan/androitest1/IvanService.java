@@ -15,7 +15,11 @@ import android.util.Log;
 
 public class IvanService extends Service {
 
-  static final String TAG = IvanService.class.getName();
+  private static final String PREFERENCES_LEVEL = "level";
+
+private static final String PREFERENCES_DATE = "date";
+
+static final String TAG = IvanService.class.getName();
 
   private static final int ANDRO_BAT_ID = 1;
 
@@ -191,7 +195,7 @@ public class IvanService extends Service {
     @Override
     public void onReceive(Context context, Intent intent) {
       Log.d("mBatInfoReceiver", "onReceive");
-      int level = intent.getIntExtra("level", 0);
+      int level = intent.getIntExtra(PREFERENCES_LEVEL, 0);
       Log.d("mBatInfoReceiver", "level is " + level);
       long time = System.currentTimeMillis();
 
@@ -206,8 +210,8 @@ public class IvanService extends Service {
         // Also record level in preferences
         SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong("date", time);
-        editor.putInt("level", level);
+        editor.putLong(PREFERENCES_DATE, time);
+        editor.putInt(PREFERENCES_LEVEL, level);
         editor.commit();
 
         updateNotificationIcon();
@@ -224,8 +228,8 @@ public class IvanService extends Service {
     private boolean levelNotSame(Context context, long time, int level) {
       boolean result = false;
       SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
-      long oldTime = prefs.getLong("date", 0);
-      int oldLevel = prefs.getInt("value", -1);
+      long oldTime = prefs.getLong(PREFERENCES_DATE, 0);
+      int oldLevel = prefs.getInt(PREFERENCES_LEVEL, -1);
 
       if (oldTime == 0 || oldLevel < 0 || oldLevel != level || (time - oldTime > MAX_MS_FOR_ONE_PERCENT)) {
         // Ok, we have some old value but it's not the same as the new one or
