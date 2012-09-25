@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -166,4 +167,13 @@ public class MainActivity extends Activity {
     
     refreshServiceRunningStatus();
   }
+  
+  public void dataCleanup(View view) {
+	    Log.d(className, "dataCleanup");
+
+	    new HistoryDAO(this).performDataCleanup();
+	    
+	    Toast.makeText(this, "Data cleanup complete!", Toast.LENGTH_LONG).show();
+	  }
+  
 }
