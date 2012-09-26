@@ -49,6 +49,31 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
     statRecord.sampleCount++;
 
   }
+  
+  
+
+  /* (non-Javadoc)
+   * @see org.aivan.androitest1.stats.StatisticsCalculator#fillTheblanks()
+   */
+  @Override
+  public void fillTheblanks() {
+    // Calculate overall average:
+    long totalSum = 0;
+    long count = 0;
+    for(StatRecord rec : statRecords) {
+      if(rec.average >0) {
+        totalSum += rec.average;
+        count++;
+      }
+    }
+    long totalAverage = totalSum / count;
+    for(StatRecord rec : statRecords) {
+      if(rec.sampleCount == 0) {
+        rec.average = totalAverage;
+      }
+    }
+    
+  }
 
   /*
    * (non-Javadoc)

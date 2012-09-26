@@ -178,13 +178,16 @@ public class MainActivity extends Activity {
 
     Toast.makeText(this, "Data cleanup complete!", Toast.LENGTH_LONG).show();
   }
+  
+  static StatisticsPercentageBasic stats = new StatisticsPercentageBasic();
 
   public void recalculateStats(View view) {
     Log.d(className, "recalculateStats");
 
-    StatisticsPercentageBasic stats = new StatisticsPercentageBasic();
+    stats = new StatisticsPercentageBasic();
 
     new HistoryDAO(this).iterateRecords(stats);
+    stats.fillTheblanks();
 
     Toast.makeText(this, "Statistics recalculated!", Toast.LENGTH_LONG).show();
 

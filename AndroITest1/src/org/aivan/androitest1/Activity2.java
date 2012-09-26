@@ -49,5 +49,12 @@ public class Activity2 extends Activity {
     view.setText(new HistoryDAO(this).getLastRecords(500));
   }
   
+  public void showStats(View view) {
+    TextView Tview = (TextView) findViewById(R.id.textView2);
+    Tview.setMovementMethod(new ScrollingMovementMethod());
+    Tview.setText(MainActivity.stats.dump());
+  }
+  
+  
   
 }
