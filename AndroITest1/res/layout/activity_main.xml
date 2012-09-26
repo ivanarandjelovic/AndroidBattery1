@@ -51,4 +51,13 @@
         android:onClick="dataCleanup"
         android:text="Perform data cleanup (remove duplicates)" />
 
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:onClick="recalculateStats"
+        android:text="Recalculate Stats" />
+
 </RelativeLayout>

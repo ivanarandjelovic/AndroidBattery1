@@ -155,6 +155,8 @@ public class HistoryDAO {
         oldValue = newValue;
       }
 	  }
+	  cursor.close();
+	  histDB.close();
 	  
 	}
 

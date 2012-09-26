@@ -1,6 +1,7 @@
 package org.aivan.androitest1;
 
 import org.aivan.androitest1.db.HistoryDAO;
+import org.aivan.androitest1.stats.StatisticsPercentageBasic;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -101,19 +102,19 @@ public class MainActivity extends Activity {
     // TODO Auto-generated method stub
     super.onResume();
     Log.d(className, "onResume called");
-    
+
     refreshServiceRunningStatus();
   }
 
   private void refreshServiceRunningStatus() {
     boolean serviceRunning = ServiceTools.isServiceRunning(this, "org.aivan.androitest1.IvanService");
-    
+
     TextView textView = (TextView) findViewById(R.id.textView1);
-    textView.setText("Service is "+(serviceRunning ? "" : "not ")+" running");
-    
+    textView.setText("Service is " + (serviceRunning ? "" : "not ") + " running");
+
     Button startServiceButton = (Button) findViewById(R.id.startService);
     Button stopServiceButton = (Button) findViewById(R.id.stopService);
-    
+
     startServiceButton.setEnabled((serviceRunning ? false : true));
     stopServiceButton.setEnabled(!startServiceButton.isEnabled());
   }
@@ -156,7 +157,7 @@ public class MainActivity extends Activity {
 
     Intent intent = new Intent(this, IvanService.class);
     startService(intent);
-    
+
     refreshServiceRunningStatus();
   }
 
@@ -166,16 +167,28 @@ public class MainActivity extends Activity {
 
     Intent intent = new Intent(this, IvanService.class);
     stopService(intent);
-    
+
     refreshServiceRunningStatus();
   }
-  
-  public void dataCleanup(View view) {
-	    Log.d(className, "dataCleanup");
 
-	    new HistoryDAO(this).performDataCleanup();
-	    
-	    Toast.makeText(this, "Data cleanup complete!", Toast.LENGTH_LONG).show();
-	  }
-  
+  public void dataCleanup(View view) {
+    Log.d(className, "dataCleanup");
+
+    new HistoryDAO(this).performDataCleanup();
+
+    Toast.makeText(this, "Data cleanup complete!", Toast.LENGTH_LONG).show();
+  }
+
+  public void recalculateStats(View view) {
+    Log.d(className, "recalculateStats");
+
+    StatisticsPercentageBasic stats = new StatisticsPercentageBasic();
+
+    new HistoryDAO(this).iterateRecords(stats);
+
+    Toast.makeText(this, "Statistics recalculated!", Toast.LENGTH_LONG).show();
+
+    Log.d(className, "Statistics dump:\n" + stats.dump());
+  }
+
 }

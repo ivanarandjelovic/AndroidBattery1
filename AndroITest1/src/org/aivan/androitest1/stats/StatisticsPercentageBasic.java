@@ -19,7 +19,7 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
     long average = 0;
   }
 
-  StatRecord[] statRecords = new StatRecord[AndroBatConfiguration.MAX_BATERY_LEVEL - AndroBatConfiguration.MIN_BATTERY_LEVEL];
+  StatRecord[] statRecords = new StatRecord[AndroBatConfiguration.MAX_BATERY_LEVEL - AndroBatConfiguration.MIN_BATTERY_LEVEL + 1];
 
   public StatisticsPercentageBasic() {
     // Just fill array with empty stat records
@@ -30,6 +30,23 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
 
   @Override
   public void evaluate(long oldDate, int oldValue, long newDate, int newValue) {
+    if (oldValue > newValue && (newDate - oldDate) < AndroBatConfiguration.MAX_MS_PER_PERCENT) {
+      // Only these cases are interesting, there should be no duplicates ,and
+      // values should not be too far apart
+      int levelDifference = oldValue - newValue;
+      long timeDifference = newDate - oldDate;
+
+      for (int i = 0; i < levelDifference; i++) {
+        updateStatRecord(statRecords[oldValue - i], timeDifference / levelDifference);
+      }
+
+    }
+  }
+
+  private void updateStatRecord(StatRecord statRecord, long value) {
+    statRecord.average = (statRecord.average) * (statRecord.sampleCount / (statRecord.sampleCount + 1)) + value
+        / (statRecord.sampleCount + 1);
+    statRecord.sampleCount++;
 
   }
 
