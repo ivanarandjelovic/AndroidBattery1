@@ -1,8 +1,11 @@
-package org.aivan.androitest1;
+package org.aivan.androitest1.db;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
+import org.aivan.androitest1.AndroBatConfiguration;
+import org.aivan.androitest1.stats.StatisticsCalculator;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import static org.aivan.androitest1.HistoryDBOpenerHelper.*;
+import static org.aivan.androitest1.db.HistoryDBOpenerHelper.*;
 
 public class HistoryDAO {
 
@@ -128,6 +131,31 @@ public class HistoryDAO {
 		
 		histDB.close();
 
+	}
+	
+	/**
+	 * Iterate all records calling StatisticsCalculator.evaluate for each pair (old/new)
+	 * @param stats StatisticsCalculator
+	 */
+	public void iterateRecords(StatisticsCalculator stats) {
+	  SQLiteDatabase histDB = dbHelper.getReadableDatabase();
+	  
+	  Cursor cursor = histDB.query(HISTORY_TABLE_NAME,
+        HistoryDBOpenerHelper.HISTORY_COLUMNS, "", null, null, null,
+        HistoryDBOpenerHelper.HISTORY_COLUMN_DATE + " asc");
+	  
+	  if(cursor.moveToFirst()) {
+	    long oldDate = cursor.getLong(cursor.getColumnIndex(HISTORY_COLUMN_DATE));
+      int oldValue = cursor.getInt(cursor.getColumnIndex(HISTORY_COLUMN_VALUE));
+      while(cursor.moveToNext()) {
+        long newDate = cursor.getLong(cursor.getColumnIndex(HISTORY_COLUMN_DATE));
+        int newValue = cursor.getInt(cursor.getColumnIndex(HISTORY_COLUMN_VALUE));
+        stats.evaluate(oldDate, oldValue, newDate, newValue);
+        oldDate = newDate;
+        oldValue = newValue;
+      }
+	  }
+	  
 	}
 
 }

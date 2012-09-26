@@ -1,5 +1,7 @@
 package org.aivan.androitest1;
 
+import org.aivan.androitest1.db.HistoryDAO;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

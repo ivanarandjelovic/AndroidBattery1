@@ -1,4 +1,4 @@
-package org.aivan.androitest1;
+package org.aivan.androitest1.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
