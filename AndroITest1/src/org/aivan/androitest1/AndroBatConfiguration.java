@@ -12,4 +12,9 @@ public class AndroBatConfiguration {
 	 * then this then we assume this is completely different reading
 	 */
 	static int MAX_MINUTES_PER_PERCENT = 12 * 60;
+
+	/**
+	 * MAX_MINUTES_PER_PERCENT calculated to ms
+	 */
+	static int MAX_MS_PER_PERCENT = MAX_MINUTES_PER_PERCENT * 60 * 1000;
 }

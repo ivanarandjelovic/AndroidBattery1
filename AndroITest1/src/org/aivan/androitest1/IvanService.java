@@ -227,7 +227,7 @@ public class IvanService extends Service {
       int oldLevel = prefs.getInt(PREFERENCES_LEVEL, -1);
 
       if (oldTime == 0 || oldLevel < 0 || oldLevel != level
-          || (time - oldTime > (AndroBatConfiguration.MAX_MINUTES_PER_PERCENT * 60 * 1000))) {
+          || (time - oldTime > (AndroBatConfiguration.MAX_MINUTES_PER_PERCENT))) {
         // Ok, we have some old value but it's not the same as the new one or
         // the time range is too long
         // so this is probably some new reading and store it as new:
