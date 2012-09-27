@@ -11,5 +11,6 @@
     <string name="performCleanup">Perform data cleanup (remove duplicates)</string>
     <string name="recalcStats">Recalculate Stats</string>
     <string name="calcPrediction">Calculate prediction</string>
+    <string name="estimateText">"Estimate: "</string>
 
 </resources>

@@ -108,4 +108,22 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
 	public void load(HistoryDAO historyDao) {
 		statRecords = historyDao.loadStats(this);
 	}
+
+	public long estimateForLevel(int lastLevel) {
+		long result = 0;
+
+		boolean found = false;
+		for (int i = 0; i <= lastLevel; i++) {
+			if (statRecords != null) {
+				result += statRecords[i].average;
+				found = true;
+			}
+		}
+
+		if (found) {
+			return result;
+		} else {
+			return Long.MIN_VALUE;
+		}
+	}
 }

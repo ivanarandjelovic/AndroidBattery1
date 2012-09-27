@@ -1,5 +1,8 @@
 package org.aivan.androitest1;
 
+import java.text.DecimalFormat;
+import java.util.logging.SimpleFormatter;
+
 import org.aivan.androitest1.db.HistoryDAO;
 import org.aivan.androitest1.stats.StatisticsPercentageBasic;
 
@@ -190,7 +193,7 @@ public class MainActivity extends Activity {
 		stats = new StatisticsPercentageBasic();
 
 		HistoryDAO historyDao = new HistoryDAO(this);
-		
+
 		historyDao.iterateRecords(stats);
 		stats.fillTheblanks();
 
@@ -198,21 +201,50 @@ public class MainActivity extends Activity {
 				.show();
 
 		stats.store(historyDao);
-		
-		Toast.makeText(this, "Statistics stored!", Toast.LENGTH_LONG)
-		.show();
+
+		Toast.makeText(this, "Statistics stored!", Toast.LENGTH_LONG).show();
 
 		Log.d(className, "Statistics dump:\n" + stats.dump());
 	}
 
 	public void calculatePrediction(View view) {
 		Log.d(className, "calculatePrediction");
-		
+
 		stats = new StatisticsPercentageBasic();
-		
+
 		HistoryDAO historyDao = new HistoryDAO(this);
-		
+
 		stats.load(historyDao);
+
+		int lastLevel = historyDao.getLastBatteryLevel();
+
+		long remainingTime = stats.estimateForLevel(lastLevel);
+
+		TextView textView = (TextView) findViewById(R.id.textView2);
+		if (remainingTime > 0) {
+
+			long days = remainingTime / AndroBatConfiguration.MS_PER_DAY;
+			remainingTime = remainingTime % AndroBatConfiguration.MS_PER_DAY;
+
+			long hours = remainingTime / AndroBatConfiguration.MS_PER_HOUR;
+			remainingTime = remainingTime % AndroBatConfiguration.MS_PER_HOUR;
+
+			long minutes = remainingTime / AndroBatConfiguration.MS_PER_MINUTE;
+			remainingTime = remainingTime % AndroBatConfiguration.MS_PER_MINUTE;
+
+			if (remainingTime > 30 * AndroBatConfiguration.MS_PER_SECOND) {
+				minutes++;
+			}
+
+			DecimalFormat df = new DecimalFormat("00");
+			textView.setText("Estimate is: "
+					+ (days > 0 ? days + " days " : "") + df.format(hours)
+					+ ":" + df.format(minutes));
+		} else {
+			textView.setText("Estimate is: N/A");
+
+		}
+
 	}
 
 }

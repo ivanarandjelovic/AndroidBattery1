@@ -204,7 +204,7 @@ public class HistoryDAO {
 
 	public StatRecord[] loadStats(StatisticsPercentageBasic statistics) {
 		ArrayList<StatRecord> stats = new ArrayList<StatRecord>();
-		
+
 		SQLiteDatabase histDB = dbHelper.getReadableDatabase();
 
 		Cursor cursor = histDB.query(STAT_TABLE_NAME,
@@ -215,12 +215,32 @@ public class HistoryDAO {
 				.moveToNext()) {
 
 			StatRecord rec = statistics.new StatRecord();
-			rec.sampleCount = cursor.getInt(cursor.getColumnIndex(STAT_COLUMN_SAMPLE_COUNT));
-			rec.average = cursor.getLong(cursor.getColumnIndex(STAT_COLUMN_AVERAGE));
+			rec.sampleCount = cursor.getInt(cursor
+					.getColumnIndex(STAT_COLUMN_SAMPLE_COUNT));
+			rec.average = cursor.getLong(cursor
+					.getColumnIndex(STAT_COLUMN_AVERAGE));
 			stats.add(rec);
 		}
 
-		return stats.toArray(new StatRecord[]{});
+		return stats.toArray(new StatRecord[] {});
+	}
+
+	public int getLastBatteryLevel() {
+		
+		int result = Integer.MIN_VALUE;
+		
+		SQLiteDatabase histDB = dbHelper.getReadableDatabase();
+		Cursor cursor = histDB.query(HISTORY_TABLE_NAME,
+				HistoryDBOpenerHelper.HISTORY_COLUMNS, "", null, null, null,
+				HistoryDBOpenerHelper.HISTORY_COLUMN_DATE + " desc", "1");
+		if (cursor != null && cursor.moveToFirst()) {
+			result = cursor.getInt(cursor
+					.getColumnIndex(HISTORY_COLUMN_VALUE));
+
+			cursor.close();
+		}
+		histDB.close();
+		return result;
 	}
 
 }

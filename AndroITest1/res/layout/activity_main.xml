@@ -69,4 +69,14 @@
         android:onClick="calculatePrediction"
         android:text="@string/calcPrediction" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@layout/activity_main"
+        android:layout_below="@+id/button4"
+        android:gravity="center_horizontal"
+        android:text="@string/estimateText"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </RelativeLayout>

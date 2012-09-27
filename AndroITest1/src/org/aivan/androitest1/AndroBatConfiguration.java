@@ -21,4 +21,14 @@ public class AndroBatConfiguration {
 	public static final int MIN_BATTERY_LEVEL = 0;
 
 	public static final int MAX_BATERY_LEVEL = 100;
+
+	static final String PREFERENCES_LEVEL = "level";
+
+	static final String PREFERENCES_DATE = "date";
+	
+	// Time constants:
+	static final long MS_PER_SECOND = 1000;
+	static final long MS_PER_MINUTE = MS_PER_SECOND * 60;
+	static final long MS_PER_HOUR = MS_PER_MINUTE * 60;
+	static final long MS_PER_DAY = MS_PER_HOUR * 24;
 }
