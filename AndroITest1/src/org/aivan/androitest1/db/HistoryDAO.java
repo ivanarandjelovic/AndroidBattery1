@@ -26,7 +26,7 @@ public class HistoryDAO {
 		super();
 		this.context = context;
 		dbHelper = new HistoryDBOpenerHelper(context,
-				HistoryDBOpenerHelper.DB_NAME, null, 2);
+				HistoryDBOpenerHelper.DB_NAME, null, HistoryDBOpenerHelper.DB_VERSION);
 	}
 
 	public void addHistoryRecord(long time, int level) {

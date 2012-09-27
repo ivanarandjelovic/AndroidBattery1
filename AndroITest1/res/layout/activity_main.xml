@@ -60,4 +60,13 @@
         android:onClick="recalculateStats"
         android:text="Recalculate Stats" />
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:onClick="calculatePrediction"
+        android:text="Calculate prediction" />
+
 </RelativeLayout>
