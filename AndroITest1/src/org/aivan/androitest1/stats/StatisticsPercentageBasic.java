@@ -105,4 +105,7 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
 		historyDao.storeStats(statRecords);
 	}
 
+	public void load(HistoryDAO historyDao) {
+		statRecords = historyDao.loadStats(this);
+	}
 }

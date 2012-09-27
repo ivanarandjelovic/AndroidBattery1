@@ -207,6 +207,12 @@ public class MainActivity extends Activity {
 
 	public void calculatePrediction(View view) {
 		Log.d(className, "calculatePrediction");
+		
+		stats = new StatisticsPercentageBasic();
+		
+		HistoryDAO historyDao = new HistoryDAO(this);
+		
+		stats.load(historyDao);
 	}
 
 }

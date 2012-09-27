@@ -29,6 +29,9 @@ public class HistoryDBOpenerHelper extends SQLiteOpenHelper {
 	public static final String STAT_COLUMN_SAMPLE_COUNT = "sampleCount";
 	public static final String STAT_COLUMN_AVERAGE = "average";
 
+	public static final String[] STAT_COLUMNS = new String[] {
+			STAT_COLUMN_PERCENT, STAT_COLUMN_SAMPLE_COUNT, STAT_COLUMN_AVERAGE };
+
 	public static final String STAT_TABLE_CREATE = "CREATE TABLE "
 			+ STAT_TABLE_NAME + " (" + STAT_COLUMN_PERCENT + " INTEGER, "
 			+ STAT_COLUMN_SAMPLE_COUNT + " INTEGER, " + STAT_COLUMN_AVERAGE
