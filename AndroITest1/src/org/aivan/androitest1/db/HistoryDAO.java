@@ -6,6 +6,7 @@ import java.util.TimeZone;
 
 import org.aivan.androitest1.AndroBatConfiguration;
 import org.aivan.androitest1.stats.StatisticsCalculator;
+import org.aivan.androitest1.stats.StatisticsPercentageBasic.StatRecord;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,7 +27,8 @@ public class HistoryDAO {
 		super();
 		this.context = context;
 		dbHelper = new HistoryDBOpenerHelper(context,
-				HistoryDBOpenerHelper.DB_NAME, null, HistoryDBOpenerHelper.DB_VERSION);
+				HistoryDBOpenerHelper.DB_NAME, null,
+				HistoryDBOpenerHelper.DB_VERSION);
 	}
 
 	public void addHistoryRecord(long time, int level) {
@@ -60,7 +62,8 @@ public class HistoryDAO {
 		SQLiteDatabase histDB = dbHelper.getReadableDatabase();
 		Cursor cursor = histDB.query(HISTORY_TABLE_NAME,
 				HistoryDBOpenerHelper.HISTORY_COLUMNS, "", null, null, null,
-				HistoryDBOpenerHelper.HISTORY_COLUMN_DATE + " desc", "" + recordCount);
+				HistoryDBOpenerHelper.HISTORY_COLUMN_DATE + " desc", ""
+						+ recordCount);
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
 				do {
@@ -94,31 +97,34 @@ public class HistoryDAO {
 
 		// 1. Delete old records:
 		SQLiteDatabase histDB = dbHelper.getWritableDatabase();
-		int rowsDeleted = histDB.delete(
-				HISTORY_TABLE_NAME,
-				HISTORY_COLUMN_DATE
-						+ " < ("
-						+ (System.currentTimeMillis() - (AndroBatConfiguration.MAX_DAYS_IN_HISTORY * 24 * 60 * 60 * 1000))
-						+ ")", null);
-		Log.d(LOG_TAG, "Old records deleted :"+rowsDeleted);
-		
+		int rowsDeleted = histDB
+				.delete(HISTORY_TABLE_NAME,
+						HISTORY_COLUMN_DATE
+								+ " < ("
+								+ (System.currentTimeMillis() - (AndroBatConfiguration.MAX_DAYS_IN_HISTORY * 24 * 60 * 60 * 1000))
+								+ ")", null);
+		Log.d(LOG_TAG, "Old records deleted :" + rowsDeleted);
+
 		// TODO: COmplete date cleanup here (removing duplicates)
-		
-		Cursor c = histDB.query(HISTORY_TABLE_NAME, HISTORY_COLUMNS , null , null, null, null, HISTORY_COLUMN_DATE);
-		
+
+		Cursor c = histDB.query(HISTORY_TABLE_NAME, HISTORY_COLUMNS, null,
+				null, null, null, HISTORY_COLUMN_DATE);
+
 		long oldDate = 0;
 		int oldValue = Integer.MIN_VALUE;
-		if(c.moveToFirst()) {
+		if (c.moveToFirst()) {
 			oldDate = c.getLong(c.getColumnIndex(HISTORY_COLUMN_DATE));
 			oldValue = c.getInt(c.getColumnIndex(HISTORY_COLUMN_VALUE));
 		}
 		int duplicatesDeleted = 0;
-		while(c.moveToNext()) {
+		while (c.moveToNext()) {
 			long newDate = c.getLong(c.getColumnIndex(HISTORY_COLUMN_DATE));
 			int newValue = c.getInt(c.getColumnIndex(HISTORY_COLUMN_VALUE));
-			if(oldValue == newValue && (newDate - oldDate) < (AndroBatConfiguration.MAX_MS_PER_PERCENT)) {
+			if (oldValue == newValue
+					&& (newDate - oldDate) < (AndroBatConfiguration.MAX_MS_PER_PERCENT)) {
 				// This is duplicate record that needs to be removed:
-				histDB.delete(HISTORY_TABLE_NAME, HISTORY_COLUMN_DATE +" = " + newDate, null);
+				histDB.delete(HISTORY_TABLE_NAME, HISTORY_COLUMN_DATE + " = "
+						+ newDate, null);
 				duplicatesDeleted++;
 			} else {
 				// This record is OK, continue to the next one:
@@ -126,38 +132,65 @@ public class HistoryDAO {
 				oldValue = newValue;
 			}
 		}
-		
-		Log.d(LOG_TAG, "Duplicate records deleted :"+duplicatesDeleted);
-		
+
+		Log.d(LOG_TAG, "Duplicate records deleted :" + duplicatesDeleted);
+
 		histDB.close();
 
 	}
-	
+
 	/**
-	 * Iterate all records calling StatisticsCalculator.evaluate for each pair (old/new)
-	 * @param stats StatisticsCalculator
+	 * Iterate all records calling StatisticsCalculator.evaluate for each pair
+	 * (old/new)
+	 * 
+	 * @param stats
+	 *            StatisticsCalculator
 	 */
 	public void iterateRecords(StatisticsCalculator stats) {
-	  SQLiteDatabase histDB = dbHelper.getReadableDatabase();
-	  
-	  Cursor cursor = histDB.query(HISTORY_TABLE_NAME,
-        HistoryDBOpenerHelper.HISTORY_COLUMNS, "", null, null, null,
-        HistoryDBOpenerHelper.HISTORY_COLUMN_DATE + " asc");
-	  
-	  if(cursor.moveToFirst()) {
-	    long oldDate = cursor.getLong(cursor.getColumnIndex(HISTORY_COLUMN_DATE));
-      int oldValue = cursor.getInt(cursor.getColumnIndex(HISTORY_COLUMN_VALUE));
-      while(cursor.moveToNext()) {
-        long newDate = cursor.getLong(cursor.getColumnIndex(HISTORY_COLUMN_DATE));
-        int newValue = cursor.getInt(cursor.getColumnIndex(HISTORY_COLUMN_VALUE));
-        stats.evaluate(oldDate, oldValue, newDate, newValue);
-        oldDate = newDate;
-        oldValue = newValue;
-      }
-	  }
-	  cursor.close();
-	  histDB.close();
-	  
+		SQLiteDatabase histDB = dbHelper.getReadableDatabase();
+
+		Cursor cursor = histDB.query(HISTORY_TABLE_NAME,
+				HistoryDBOpenerHelper.HISTORY_COLUMNS, "", null, null, null,
+				HistoryDBOpenerHelper.HISTORY_COLUMN_DATE + " asc");
+
+		if (cursor.moveToFirst()) {
+			long oldDate = cursor.getLong(cursor
+					.getColumnIndex(HISTORY_COLUMN_DATE));
+			int oldValue = cursor.getInt(cursor
+					.getColumnIndex(HISTORY_COLUMN_VALUE));
+			while (cursor.moveToNext()) {
+				long newDate = cursor.getLong(cursor
+						.getColumnIndex(HISTORY_COLUMN_DATE));
+				int newValue = cursor.getInt(cursor
+						.getColumnIndex(HISTORY_COLUMN_VALUE));
+				stats.evaluate(oldDate, oldValue, newDate, newValue);
+				oldDate = newDate;
+				oldValue = newValue;
+			}
+		}
+		cursor.close();
+		histDB.close();
+
+	}
+
+	public void storeStats(StatRecord[] statRecords) {
+		SQLiteDatabase histDB = dbHelper.getWritableDatabase();
+		histDB.delete(STAT_TABLE_NAME, "1", null);
+		
+		int counter = 0;
+		for(StatRecord rec : statRecords) {
+			
+			ContentValues values = new ContentValues();
+			values.put(STAT_COLUMN_PERCENT, counter);
+			values.put(STAT_COLUMN_SAMPLE_COUNT, rec.sampleCount);
+			values.put(STAT_COLUMN_AVERAGE, rec.average);
+			
+			histDB.insert(STAT_TABLE_NAME, null, values);
+			
+			counter++;
+		}
+			
+		histDB.close();
 	}
 
 }

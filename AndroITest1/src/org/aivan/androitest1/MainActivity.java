@@ -189,11 +189,18 @@ public class MainActivity extends Activity {
 
 		stats = new StatisticsPercentageBasic();
 
-		new HistoryDAO(this).iterateRecords(stats);
+		HistoryDAO historyDao = new HistoryDAO(this);
+		
+		historyDao.iterateRecords(stats);
 		stats.fillTheblanks();
 
 		Toast.makeText(this, "Statistics recalculated!", Toast.LENGTH_LONG)
 				.show();
+
+		stats.store(historyDao);
+		
+		Toast.makeText(this, "Statistics stored!", Toast.LENGTH_LONG)
+		.show();
 
 		Log.d(className, "Statistics dump:\n" + stats.dump());
 	}

@@ -19,7 +19,7 @@
         android:layout_below="@id/button1"
         android:layout_centerHorizontal="true"
         android:onClick="startService"
-        android:text="Start Service" />
+        android:text="@string/startService" />
 
     <TextView
         android:id="@+id/textView1"
@@ -39,7 +39,7 @@
         android:layout_below="@+id/textView1"
         android:layout_marginTop="15dp"
         android:onClick="stopService"
-        android:text="Stop Service" />
+        android:text="@string/stopService" />
 
     <Button
         android:id="@+id/button2"
@@ -49,7 +49,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="false"
         android:onClick="dataCleanup"
-        android:text="Perform data cleanup (remove duplicates)" />
+        android:text="@string/performCleanup" />
 
     <Button
         android:id="@+id/button3"
@@ -58,7 +58,7 @@
         android:layout_below="@+id/button2"
         android:layout_centerHorizontal="true"
         android:onClick="recalculateStats"
-        android:text="Recalculate Stats" />
+        android:text="@string/recalcStats" />
 
     <Button
         android:id="@+id/button4"
@@ -67,6 +67,6 @@
         android:layout_below="@+id/button3"
         android:layout_centerHorizontal="true"
         android:onClick="calculatePrediction"
-        android:text="Calculate prediction" />
+        android:text="@string/calcPrediction" />
 
 </RelativeLayout>

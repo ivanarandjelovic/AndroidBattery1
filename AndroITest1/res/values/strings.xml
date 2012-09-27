@@ -6,5 +6,10 @@
     <string name="title_activity_main">AndroBat1</string>
     <string name="title_activity_activity2">Data view</string>
     <string name="open_activity_2">Show latest DB content</string>
+    <string name="startService">Start Service</string>
+    <string name="stopService">Stop Service</string>
+    <string name="performCleanup">Perform data cleanup (remove duplicates)</string>
+    <string name="recalcStats">Recalculate Stats</string>
+    <string name="calcPrediction">Calculate prediction</string>
 
 </resources>

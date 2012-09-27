@@ -1,6 +1,7 @@
 package org.aivan.androitest1.stats;
 
 import org.aivan.androitest1.AndroBatConfiguration;
+import org.aivan.androitest1.db.HistoryDAO;
 
 /**
  * @author aivan
@@ -14,9 +15,9 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
 	 * @author aivan
 	 * 
 	 */
-	class StatRecord {
-		int sampleCount = 0;
-		long average = 0;
+	public class StatRecord {
+		public int sampleCount = 0;
+		public long average = 0;
 	}
 
 	StatRecord[] statRecords = new StatRecord[AndroBatConfiguration.MAX_BATERY_LEVEL
@@ -98,6 +99,10 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
 			}
 		}
 		return result;
+	}
+
+	public void store(HistoryDAO historyDao) {
+		historyDao.storeStats(statRecords);
 	}
 
 }
