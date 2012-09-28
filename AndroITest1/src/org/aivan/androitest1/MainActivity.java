@@ -6,6 +6,7 @@ import org.aivan.androitest1.db.HistoryDAO;
 import org.aivan.androitest1.stats.StatisticsPercentageBasic;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.d(className, "onCreate called");
 		setContentView(R.layout.activity_main);
+
+		// This is the good place to start our service, in case it's not started
+		// yet:
+		startIvanService();
 	}
 
 	@Override
@@ -106,6 +111,7 @@ public class MainActivity extends Activity {
 		Log.d(className, "onResume called");
 
 		refreshServiceRunningStatus();
+		calculatePrediction();
 	}
 
 	private void refreshServiceRunningStatus() {
@@ -159,10 +165,14 @@ public class MainActivity extends Activity {
 		// Do something in response to button
 		Log.d(className, "startService");
 
-		Intent intent = new Intent(this, IvanService.class);
-		startService(intent);
+		startIvanService();
 
 		refreshServiceRunningStatus();
+	}
+
+	private void startIvanService() {
+		Intent intent = new Intent(this, IvanService.class);
+		startService(intent);
 	}
 
 	public void stopService(View view) {
@@ -207,19 +217,40 @@ public class MainActivity extends Activity {
 	}
 
 	public void calculatePrediction(View view) {
+		calculatePrediction();
+
+	}
+
+	private void calculatePrediction() {
 		Log.d(className, "calculatePrediction");
 
+		String remainingTime = getPrediction(this);
+
+		TextView textView = (TextView) findViewById(R.id.textView2);
+		if (remainingTime != null) {
+
+			textView.setText(remainingTime);
+		} else {
+			textView.setText("Estimate is: N/A");
+
+		}
+	}
+
+	static public String getPrediction(Context context) {
 		stats = new StatisticsPercentageBasic();
 
-		HistoryDAO historyDao = new HistoryDAO(this);
+		HistoryDAO historyDao = new HistoryDAO(context);
 
 		stats.load(historyDao);
 
 		int lastLevel = historyDao.getLastBatteryLevel();
+		long lastTime = historyDao.getLastBatteryDate();
 
 		long remainingTime = stats.estimateForLevel(lastLevel);
 
-		TextView textView = (TextView) findViewById(R.id.textView2);
+		// Reduce for time passed since last level change
+		remainingTime -= (System.currentTimeMillis() - lastTime);
+
 		if (remainingTime > 0) {
 
 			long days = remainingTime / AndroBatConfiguration.MS_PER_DAY;
@@ -236,14 +267,11 @@ public class MainActivity extends Activity {
 			}
 
 			DecimalFormat df = new DecimalFormat("00");
-			textView.setText("Estimate is: "
-					+ (days > 0 ? days + " days " : "") + df.format(hours)
-					+ ":" + df.format(minutes));
+			return ((days > 0 ? days + " days " : "") + df.format(hours) + ":" + df
+					.format(minutes));
 		} else {
-			textView.setText("Estimate is: N/A");
-
+			return null;
 		}
-
 	}
 
 }

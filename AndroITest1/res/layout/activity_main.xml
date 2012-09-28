@@ -7,6 +7,7 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/textView2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
         android:onClick="sendMessage"
@@ -73,10 +74,11 @@
         android:id="@+id/textView2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@layout/activity_main"
-        android:layout_below="@+id/button4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
         android:text="@string/estimateText"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/bigText" />
 
 </RelativeLayout>
