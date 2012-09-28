@@ -6,8 +6,13 @@ import org.aivan.androitest1.db.HistoryDAO;
 import org.aivan.androitest1.stats.StatisticsPercentageBasic;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +34,12 @@ public class MainActivity extends Activity {
 		// This is the good place to start our service, in case it's not started
 		// yet:
 		startIvanService();
+		
+//		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+//        * AndroBatConfiguration.MS_PER_SECOND, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+//        * AndroBatConfiguration.MS_PER_SECOND,
+//        PendingIntent.getBroadcast(this, 0, new Intent(this, AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT));
 	}
 
 	@Override
@@ -69,6 +80,9 @@ public class MainActivity extends Activity {
 	 */
 	@Override
 	protected void onDestroy() {
+//	  AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//    alarmManager.cancel(PendingIntent.getActivity(this, 0, new Intent(this, AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT));
+//    
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		Log.d(className, "onDestroy called");
@@ -279,4 +293,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
+
+  
 }

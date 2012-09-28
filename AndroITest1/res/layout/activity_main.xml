@@ -76,7 +76,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:clickable="true"
         android:gravity="center_horizontal"
+        android:onClick="calculatePrediction"
         android:text="@string/estimateText"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/bigText" />
