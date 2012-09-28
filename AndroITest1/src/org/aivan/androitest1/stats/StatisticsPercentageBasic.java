@@ -1,7 +1,12 @@
 package org.aivan.androitest1.stats;
 
+import java.text.SimpleDateFormat;
+
 import org.aivan.androitest1.AndroBatConfiguration;
 import org.aivan.androitest1.db.HistoryDAO;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 
 /**
  * @author aivan
@@ -87,20 +92,32 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
 	 * 
 	 * @see org.aivan.androitest1.StatisticsCalculator#dump()
 	 */
-	public String dump() {
+	public String dump(Context context) {
 		String result = "";
-		int index = 0;
-		for (StatRecord rec : statRecords) {
-			result += "index=" + index + " samples=" + rec.sampleCount
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(getStatusTimeFromPreferences(context)>0) {
+		  result += "Stats calculated at: "+sdf.format(getStatusTimeFromPreferences(context))+"\n";
+		} else {
+		  result += "Stats not calculated yet.\n";
+		}
+		for (int i=statRecords.length-1;i>=0;i--) {
+		  StatRecord rec = statRecords[i];
+			result += "index=" + i + " samples=" + rec.sampleCount
 					+ " avgValue=" + rec.average;
-			index++;
-			if (index < statRecords.length) {
+		
+			if (i > 0) {
 				result += "\n";
 			}
 		}
 		return result;
 	}
 
+  static protected long getStatusTimeFromPreferences(Context context) {
+    SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+    return prefs.getLong(AndroBatConfiguration.PREFERENCES_STATS_TIMESTAMP, 0);
+  } 
+  
 	public void store(HistoryDAO historyDao) {
 		historyDao.storeStats(statRecords);
 	}
@@ -113,7 +130,7 @@ public class StatisticsPercentageBasic implements StatisticsCalculator {
 		long result = 0;
 
 		boolean found = false;
-		for (int i = 0; i <= lastLevel; i++) {
+		for (int i = 0; i <= lastLevel && i < statRecords.length; i++) {
 			if (statRecords != null) {
 				result += statRecords[i].average;
 				found = true;

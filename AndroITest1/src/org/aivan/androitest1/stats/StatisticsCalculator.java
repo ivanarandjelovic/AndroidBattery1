@@ -1,5 +1,7 @@
 package org.aivan.androitest1.stats;
 
+import android.content.Context;
+
 public interface StatisticsCalculator {
   /**
    * Process one pair of readings, two successive records
@@ -20,5 +22,5 @@ public interface StatisticsCalculator {
    * Helper method to dump all statis into a string, mostly for debugging purposes
    * @return
    */
-  String dump();
+  String dump(Context context);
 }

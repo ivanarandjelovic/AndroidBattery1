@@ -205,7 +205,7 @@ public class MainActivity extends Activity {
 
 		Toast.makeText(this, "Statistics recalculated and stored!", Toast.LENGTH_SHORT).show();
 
-		Log.d(className, "Statistics dump:\n" + stats.dump());
+		Log.d(className, "Statistics dump:\n" + stats.dump(this));
 	}
 
 	static protected void recalculateStatistics(Context context) {

@@ -36,7 +36,9 @@ public class AndroBatConfiguration {
 
 	static final String PREFERENCES_IS_CHARING = "isCharging";
 	
-	static final String PREFERENCES_STATS_TIMESTAMP = "statsTimestamp";
+	public static final String PREFERENCES_STATS_TIMESTAMP = "statsTimestamp";
+	
+  static final int ESTIMATE_UPDATE_INTERVAL_IN_MINUTES = 5;
 	
 
 }

@@ -2,6 +2,7 @@ package org.aivan.androitest1;
 
 import org.aivan.androitest1.db.HistoryDAO;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,223 +18,217 @@ import android.util.Log;
 
 public class IvanService extends Service {
 
-	static final String TAG = IvanService.class.getName();
+  static final String TAG = IvanService.class.getName();
 
-	private static final int ANDRO_BAT_ID = 1;
+  private static final int ANDRO_BAT_ID = 1;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Service#onCreate()
-	 */
-	@Override
-	public void onCreate() {
-		// TODO Auto-generated method stub
-		super.onCreate();
-		Log.d(TAG, "onCreate");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Service#onCreate()
+   */
+  @Override
+  public void onCreate() {
+    // TODO Auto-generated method stub
+    super.onCreate();
+    Log.d(TAG, "onCreate");
 
-		registerReceiver(this.mBatInfoReceiver, new IntentFilter(
-				Intent.ACTION_BATTERY_CHANGED));
+    registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
-	}
+    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    alarmManager.setRepeating(AlarmManager.RTC, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+        * AndroBatConfiguration.MS_PER_MINUTE, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+        * AndroBatConfiguration.MS_PER_MINUTE,
+        PendingIntent.getService(this, 0, new Intent(this, IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT));
 
-	private void updateNotificationIcon() {
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+  }
 
-		int icon = R.drawable.bat_level_list;
-		CharSequence tickerText = null;
-		long when = System.currentTimeMillis();
+  private void updateNotificationIcon() {
+    String ns = Context.NOTIFICATION_SERVICE;
+    NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
-		Notification notification = new Notification(icon, tickerText, when);
+    int icon = R.drawable.bat_level_list;
+    CharSequence tickerText = null;
+    long when = System.currentTimeMillis();
 
-		Context context = getApplicationContext();
-		CharSequence contentTitle = getResources().getText(R.string.app_name);
-		CharSequence contentText = "Battery: " + lastLevel + " %"
-				+ "\nRemaining: " + MainActivity.getPrediction(context); 
+    Notification notification = new Notification(icon, tickerText, when);
 
-		Intent notificationIntent = new Intent(this, MainActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
+    Context context = getApplicationContext();
+    CharSequence contentTitle = getResources().getText(R.string.app_name);
+    String prediction = MainActivity.getPrediction(context);
+    CharSequence contentText = "Battery: " + lastLevel + " %" + "\nRemaining: " + (prediction == null ? "N/A" : prediction);
 
-		notification.setLatestEventInfo(context, contentTitle, contentText,
-				contentIntent);
-		notification.flags |= Notification.FLAG_ONGOING_EVENT;
-		// notification.number = (int) lastLevel;
-		notification.iconLevel = (int) lastLevel;
+    Intent notificationIntent = new Intent(this, MainActivity.class);
+    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-		mNotificationManager.notify(ANDRO_BAT_ID, notification);
-	}
+    notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+    notification.flags |= Notification.FLAG_ONGOING_EVENT;
+    // notification.number = (int) lastLevel;
+    notification.iconLevel = (int) lastLevel;
 
-	private void cancelNotificationIcon() {
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-		mNotificationManager.cancelAll();
-	}
+    mNotificationManager.notify(ANDRO_BAT_ID, notification);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Service#onDestroy()
-	 */
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		Log.d(TAG, "onDestroy");
+  private void cancelNotificationIcon() {
+    String ns = Context.NOTIFICATION_SERVICE;
+    NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+    mNotificationManager.cancelAll();
+  }
 
-		cancelNotificationIcon();
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Service#onDestroy()
+   */
+  @Override
+  public void onDestroy() {
+    // TODO Auto-generated method stub
+    super.onDestroy();
+    Log.d(TAG, "onDestroy");
 
-		unregisterReceiver(this.mBatInfoReceiver);
-	}
+    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    alarmManager.cancel(PendingIntent.getService(this, 0, new Intent(this, IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT));
 
-	static long lastLevel = Long.MIN_VALUE;
+    cancelNotificationIcon();
 
-	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
+    unregisterReceiver(this.mBatInfoReceiver);
+  }
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d("mBatInfoReceiver", "onReceive");
-			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-			int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-			Log.d("mBatInfoReceiver", "level is " + level);
-			Log.d("mBatInfoReceiver", "scale is " + scale);
-			long time = System.currentTimeMillis();
+  static long lastLevel = Long.MIN_VALUE;
 
-			int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-			boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING
-					|| status == BatteryManager.BATTERY_STATUS_FULL;
+  private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
 
-			int chargePlug = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED,
-					-1);
-			boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-			boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-			Log.d("mBatInfoReceiver", "isCharging = " + isCharging);
-			Log.d("mBatInfoReceiver", "usbCharge = " + usbCharge);
-			Log.d("mBatInfoReceiver", "acCharge = " + acCharge);
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      Log.d("mBatInfoReceiver", "onReceive");
+      int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+      int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+      Log.d("mBatInfoReceiver", "level is " + level);
+      Log.d("mBatInfoReceiver", "scale is " + scale);
+      long time = System.currentTimeMillis();
 
-			HistoryDAO historyDAO = new HistoryDAO(context);
+      int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+      boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
 
-			// Write new battery level only if it has changed since last one
-			// written to the database
-			if (level >= AndroBatConfiguration.MIN_BATTERY_LEVEL
-					&& level <= AndroBatConfiguration.MAX_BATERY_LEVEL) {
-				// Ok, valid level values, now check if we have lastLevel stored
-				// in
-				// static variable
-				if ((lastLevel == Long.MIN_VALUE && levelNotSameAsInPreferences(
-						context, time, level))
-						|| (lastLevel != Long.MIN_VALUE && lastLevel != level)) {
-					historyDAO.addHistoryRecord(time, level);
+      int chargePlug = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+      boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+      boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+      Log.d("mBatInfoReceiver", "isCharging = " + isCharging);
+      Log.d("mBatInfoReceiver", "usbCharge = " + usbCharge);
+      Log.d("mBatInfoReceiver", "acCharge = " + acCharge);
 
-					// Record level in preferences, in case our class is
-					// unloaded
-					saveLevelToPreferences(context, level, time);
+      HistoryDAO historyDAO = new HistoryDAO(context);
 
-					updateNotificationIcon();
+      // Write new battery level only if it has changed since last one
+      // written to the database
+      if (level >= AndroBatConfiguration.MIN_BATTERY_LEVEL && level <= AndroBatConfiguration.MAX_BATERY_LEVEL) {
+        // Ok, valid level values, now check if we have lastLevel stored
+        // in
+        // static variable
+        if ((lastLevel == Long.MIN_VALUE && levelNotSameAsInPreferences(context, time, level))
+            || (lastLevel != Long.MIN_VALUE && lastLevel != level)) {
+          historyDAO.addHistoryRecord(time, level);
 
-				}
+          // Record level in preferences, in case our class is
+          // unloaded
+          saveLevelToPreferences(context, level, time);
 
-				// Record last level in a static field (to save lookup to
-				// preferences, whenever possible (whenever the class
-				// is still in memory)
-				lastLevel = level;
+          updateNotificationIcon();
 
-				if (getOldIsCharningPreferences(context) == true && !isCharging
-						&& !levelNotSameAsInPreferences(context, time, level)) {
-					// We stopped charging, update last DB history record to
-					// current time since this is the moment when we start
-					// discharing the battery
-					historyDAO.updateLastHistoryRecordTime(time);
-				}
-				if (getOldIsCharningPreferences(context) == false && isCharging
-						&& IsItTimeToRecalculateStats(context)) {
-					// We started charning, now is the time to recalculate
-					// statistics!!!
-					MainActivity.recalculateStatistics(context);
-					saveStatsTimeToPreferences(context, time);
-				}
+        }
 
-			}
-			saveIsChargingToPreferences(context, isCharging);
+        // Record last level in a static field (to save lookup to
+        // preferences, whenever possible (whenever the class
+        // is still in memory)
+        lastLevel = level;
 
-			updateNotificationIcon();
-		}
+        if (getOldIsCharningPreferences(context) == true && !isCharging && !levelNotSameAsInPreferences(context, time, level)) {
+          // We stopped charging, update last DB history record to
+          // current time since this is the moment when we start
+          // discharing the battery
+          historyDAO.updateLastHistoryRecordTime(time);
+        }
+        if (getOldIsCharningPreferences(context) == false && isCharging && IsItTimeToRecalculateStats(context)) {
+          // We started charning, now is the time to recalculate
+          // statistics!!!
+          MainActivity.recalculateStatistics(context);
+          saveStatsTimeToPreferences(context, time);
+        }
 
-		private boolean IsItTimeToRecalculateStats(Context context) {
-			SharedPreferences prefs = context.getSharedPreferences(
-					"IvanService", Context.MODE_PRIVATE);
-			return (System.currentTimeMillis() - prefs.getLong(
-					AndroBatConfiguration.PREFERENCES_STATS_TIMESTAMP,
-					0)) > AndroBatConfiguration.RECALC_STATS_PERIOD;
-		}
+      }
+      saveIsChargingToPreferences(context, isCharging);
 
-		private void saveStatsTimeToPreferences(Context context,
-				long time) {
-			SharedPreferences prefs = context.getSharedPreferences(
-					"IvanService", Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putLong(AndroBatConfiguration.PREFERENCES_STATS_TIMESTAMP,
-					time);
-			editor.commit();
-		}
+      updateNotificationIcon();
+    }
 
-		private void saveIsChargingToPreferences(Context context,
-				boolean isCharging) {
-			SharedPreferences prefs = context.getSharedPreferences(
-					"IvanService", Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean(AndroBatConfiguration.PREFERENCES_IS_CHARING,
-					isCharging);
-			editor.commit();
-		}
+    private boolean IsItTimeToRecalculateStats(Context context) {
+      SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+      return (System.currentTimeMillis() - prefs.getLong(AndroBatConfiguration.PREFERENCES_STATS_TIMESTAMP, 0)) > AndroBatConfiguration.RECALC_STATS_PERIOD;
+    }
+    
+    private void saveStatsTimeToPreferences(Context context, long time) {
+      SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+      SharedPreferences.Editor editor = prefs.edit();
+      editor.putLong(AndroBatConfiguration.PREFERENCES_STATS_TIMESTAMP, time);
+      editor.commit();
+    }
 
-		private boolean getOldIsCharningPreferences(Context context) {
-			SharedPreferences prefs = context.getSharedPreferences(
-					"IvanService", Context.MODE_PRIVATE);
-			return prefs.getBoolean(
-					AndroBatConfiguration.PREFERENCES_IS_CHARING, false);
-		}
+    private void saveIsChargingToPreferences(Context context, boolean isCharging) {
+      SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+      SharedPreferences.Editor editor = prefs.edit();
+      editor.putBoolean(AndroBatConfiguration.PREFERENCES_IS_CHARING, isCharging);
+      editor.commit();
+    }
 
-		private void saveLevelToPreferences(Context context, int level,
-				long time) {
-			SharedPreferences prefs = context.getSharedPreferences(
-					"IvanService", Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putLong(AndroBatConfiguration.PREFERENCES_DATE, time);
-			editor.putInt(AndroBatConfiguration.PREFERENCES_LEVEL, level);
-			editor.commit();
-		}
+    private boolean getOldIsCharningPreferences(Context context) {
+      SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+      return prefs.getBoolean(AndroBatConfiguration.PREFERENCES_IS_CHARING, false);
+    }
 
-		private boolean levelNotSameAsInPreferences(Context context, long time,
-				int level) {
-			boolean result = false;
-			SharedPreferences prefs = context.getSharedPreferences(
-					"IvanService", Context.MODE_PRIVATE);
-			long oldTime = prefs.getLong(
-					AndroBatConfiguration.PREFERENCES_DATE, 0);
-			int oldLevel = prefs.getInt(
-					AndroBatConfiguration.PREFERENCES_LEVEL, -1);
+    private void saveLevelToPreferences(Context context, int level, long time) {
+      SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+      SharedPreferences.Editor editor = prefs.edit();
+      editor.putLong(AndroBatConfiguration.PREFERENCES_DATE, time);
+      editor.putInt(AndroBatConfiguration.PREFERENCES_LEVEL, level);
+      editor.commit();
+    }
 
-			if (oldTime == 0
-					|| oldLevel < 0
-					|| oldLevel != level
-					|| (time - oldTime > (AndroBatConfiguration.MAX_MS_PER_PERCENT))) {
-				// Ok, we have some old value but it's not the same as the new
-				// one or
-				// the time range is too long
-				// so this is probably some new reading and store it as new:
-				result = true;
-			}
+    private boolean levelNotSameAsInPreferences(Context context, long time, int level) {
+      boolean result = false;
+      SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+      long oldTime = prefs.getLong(AndroBatConfiguration.PREFERENCES_DATE, 0);
+      int oldLevel = prefs.getInt(AndroBatConfiguration.PREFERENCES_LEVEL, -1);
 
-			return result;
-		}
-	};
+      if (oldTime == 0 || oldLevel < 0 || oldLevel != level || (time - oldTime > (AndroBatConfiguration.MAX_MS_PER_PERCENT))) {
+        // Ok, we have some old value but it's not the same as the new
+        // one or
+        // the time range is too long
+        // so this is probably some new reading and store it as new:
+        result = true;
+      }
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+      return result;
+    }
+  };
+
+  @Override
+  public IBinder onBind(Intent intent) {
+    // TODO Auto-generated method stub
+    Log.d(TAG, "onBind");
+
+    return null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Service#onStartCommand(android.content.Intent, int, int)
+   */
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    // TODO Auto-generated method stub
+    Log.d(TAG, "onStartCommand");
+    return super.onStartCommand(intent, flags, startId);
+  }
 
 }
