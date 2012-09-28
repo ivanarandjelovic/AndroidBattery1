@@ -2,6 +2,14 @@ package org.aivan.androitest1;
 
 public class AndroBatConfiguration {
 
+	// Time constants:
+	static final long MS_PER_SECOND = 1000;
+	static final long MS_PER_MINUTE = MS_PER_SECOND * 60;
+	static final long MS_PER_HOUR = MS_PER_MINUTE * 60;
+	static final long MS_PER_DAY = MS_PER_HOUR * 24;
+
+	
+	public static long RECALC_STATS_PERIOD = 6 * MS_PER_HOUR; // 6 hours at least
 	/**
 	 * How many days we keep in our history
 	 */
@@ -16,7 +24,7 @@ public class AndroBatConfiguration {
 	/**
 	 * MAX_MINUTES_PER_PERCENT calculated to ms
 	 */
-	public static int MAX_MS_PER_PERCENT = MAX_MINUTES_PER_PERCENT * 60 * 1000;
+	public static long MAX_MS_PER_PERCENT = MAX_MINUTES_PER_PERCENT * MS_PER_MINUTE;
 
 	public static final int MIN_BATTERY_LEVEL = 0;
 
@@ -28,10 +36,7 @@ public class AndroBatConfiguration {
 
 	static final String PREFERENCES_IS_CHARING = "isCharging";
 	
+	static final String PREFERENCES_STATS_TIMESTAMP = "statsTimestamp";
+	
 
-	// Time constants:
-	static final long MS_PER_SECOND = 1000;
-	static final long MS_PER_MINUTE = MS_PER_SECOND * 60;
-	static final long MS_PER_HOUR = MS_PER_MINUTE * 60;
-	static final long MS_PER_DAY = MS_PER_HOUR * 24;
 }

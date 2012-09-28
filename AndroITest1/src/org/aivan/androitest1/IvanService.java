@@ -49,8 +49,9 @@ public class IvanService extends Service {
 
 		Context context = getApplicationContext();
 		CharSequence contentTitle = getResources().getText(R.string.app_name);
-		CharSequence contentText = "Battery: " + lastLevel + " %" + "\nRemaining: "+MainActivity.getPrediction(context);
-		
+		CharSequence contentText = "Battery: " + lastLevel + " %"
+				+ "\nRemaining: " + MainActivity.getPrediction(context); 
+
 		Intent notificationIntent = new Intent(this, MainActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
@@ -79,7 +80,7 @@ public class IvanService extends Service {
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Log.d(TAG, "onDestroy"); 
+		Log.d(TAG, "onDestroy");
 
 		cancelNotificationIcon();
 
@@ -133,7 +134,8 @@ public class IvanService extends Service {
 
 				}
 
-				// Record last level in a static field (to save lookup to preferences, whenever possible (whenever the class
+				// Record last level in a static field (to save lookup to
+				// preferences, whenever possible (whenever the class
 				// is still in memory)
 				lastLevel = level;
 
@@ -144,10 +146,36 @@ public class IvanService extends Service {
 					// discharing the battery
 					historyDAO.updateLastHistoryRecordTime(time);
 				}
+				if (getOldIsCharningPreferences(context) == false && isCharging
+						&& IsItTimeToRecalculateStats(context)) {
+					// We started charning, now is the time to recalculate
+					// statistics!!!
+					MainActivity.recalculateStatistics(context);
+					saveStatsTimeToPreferences(context, time);
+				}
+
 			}
 			saveIsChargingToPreferences(context, isCharging);
 
 			updateNotificationIcon();
+		}
+
+		private boolean IsItTimeToRecalculateStats(Context context) {
+			SharedPreferences prefs = context.getSharedPreferences(
+					"IvanService", Context.MODE_PRIVATE);
+			return (System.currentTimeMillis() - prefs.getLong(
+					AndroBatConfiguration.PREFERENCES_STATS_TIMESTAMP,
+					0)) > AndroBatConfiguration.RECALC_STATS_PERIOD;
+		}
+
+		private void saveStatsTimeToPreferences(Context context,
+				long time) {
+			SharedPreferences prefs = context.getSharedPreferences(
+					"IvanService", Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putLong(AndroBatConfiguration.PREFERENCES_STATS_TIMESTAMP,
+					time);
+			editor.commit();
 		}
 
 		private void saveIsChargingToPreferences(Context context,

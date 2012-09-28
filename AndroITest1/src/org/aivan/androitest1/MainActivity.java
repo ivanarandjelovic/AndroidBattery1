@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	String className = MainActivity.class.getName();
+	static String className = MainActivity.class.getName();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -198,22 +198,27 @@ public class MainActivity extends Activity {
 
 	public void recalculateStats(View view) {
 		Log.d(className, "recalculateStats");
+		
+		new HistoryDAO(this).performDataCleanup();
 
+		recalculateStatistics(this);
+
+		Toast.makeText(this, "Statistics recalculated and stored!", Toast.LENGTH_SHORT).show();
+
+		Log.d(className, "Statistics dump:\n" + stats.dump());
+	}
+
+	static protected void recalculateStatistics(Context context) {
+		Log.d(className, "recalculateStatistics called");
+		
 		stats = new StatisticsPercentageBasic();
 
-		HistoryDAO historyDao = new HistoryDAO(this);
+		HistoryDAO historyDao = new HistoryDAO(context);
 
 		historyDao.iterateRecords(stats);
 		stats.fillTheblanks();
 
-		Toast.makeText(this, "Statistics recalculated!", Toast.LENGTH_LONG)
-				.show();
-
 		stats.store(historyDao);
-
-		Toast.makeText(this, "Statistics stored!", Toast.LENGTH_LONG).show();
-
-		Log.d(className, "Statistics dump:\n" + stats.dump());
 	}
 
 	public void calculatePrediction(View view) {
@@ -236,7 +241,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	static public String getPrediction(Context context) {
+	static protected String getPrediction(Context context) {
 		stats = new StatisticsPercentageBasic();
 
 		HistoryDAO historyDao = new HistoryDAO(context);
