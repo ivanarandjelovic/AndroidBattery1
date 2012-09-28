@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.BatteryManager;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -91,10 +92,25 @@ public class IvanService extends Service {
     @Override
     public void onReceive(Context context, Intent intent) {
       Log.d("mBatInfoReceiver", "onReceive");
-      int level = intent.getIntExtra(AndroBatConfiguration.PREFERENCES_LEVEL, 0);
+      int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+      int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
       Log.d("mBatInfoReceiver", "level is " + level);
+      Log.d("mBatInfoReceiver", "scale is " + scale);
       long time = System.currentTimeMillis();
+      
+      int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+      boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                          status == BatteryManager.BATTERY_STATUS_FULL;
+  
+      int chargePlug = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+      boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+      boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+      Log.d("mBatInfoReceiver","isCharging = "+isCharging);
+      Log.d("mBatInfoReceiver","usbCharge = "+usbCharge);
+      Log.d("mBatInfoReceiver","acCharge = "+acCharge);
 
+      HistoryDAO historyDAO = new HistoryDAO(context);
+      
       // Write new battery level only if it has changed since last one
       // written to the database
       if (level >= AndroBatConfiguration.MIN_BATTERY_LEVEL && level <= AndroBatConfiguration.MAX_BATERY_LEVEL) {
@@ -102,7 +118,7 @@ public class IvanService extends Service {
         // static variable
         if ((lastLevel == Long.MIN_VALUE && levelNotSameAsInPreferences(context, time, level))
             || (lastLevel != Long.MIN_VALUE && lastLevel != level)) {
-          new HistoryDAO(context).addHistoryRecord(time, level);
+        	historyDAO.addHistoryRecord(time, level);
           // Record last level in a static field
           lastLevel = level;
           // Also record level in preferences, in case our class is unloaded
@@ -111,11 +127,29 @@ public class IvanService extends Service {
           updateNotificationIcon();
 
         }
+        if(getOldIsCharningPreferences(context)==true && !isCharging && !levelNotSameAsInPreferences(context, time, level)) {
+        	// We stopped charging, update last DB history record to current time since this is the moment when we start 
+        	// discharing the battery
+        	historyDAO.updateLastHistoryRecordTime(time);
+        }
       }
+      saveIsChargingToPreferences(context, isCharging);
 
     }
 
-    private void saveLevelToPreferences(Context context, int level, long time) {
+    private void saveIsChargingToPreferences(Context context, boolean isCharging) {
+        SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(AndroBatConfiguration.PREFERENCES_IS_CHARING, isCharging);
+        editor.commit();
+	}
+    
+    private boolean getOldIsCharningPreferences(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
+        return prefs.getBoolean(AndroBatConfiguration.PREFERENCES_IS_CHARING,false);
+    }
+
+	private void saveLevelToPreferences(Context context, int level, long time) {
       SharedPreferences prefs = context.getSharedPreferences("IvanService", Context.MODE_PRIVATE);
       SharedPreferences.Editor editor = prefs.edit();
       editor.putLong(AndroBatConfiguration.PREFERENCES_DATE, time);
@@ -129,7 +163,7 @@ public class IvanService extends Service {
       long oldTime = prefs.getLong(AndroBatConfiguration.PREFERENCES_DATE, 0);
       int oldLevel = prefs.getInt(AndroBatConfiguration.PREFERENCES_LEVEL, -1);
 
-      if (oldTime == 0 || oldLevel < 0 || oldLevel != level || (time - oldTime > (AndroBatConfiguration.MAX_MINUTES_PER_PERCENT))) {
+      if (oldTime == 0 || oldLevel < 0 || oldLevel != level || (time - oldTime > (AndroBatConfiguration.MAX_MS_PER_PERCENT))) {
         // Ok, we have some old value but it's not the same as the new one or
         // the time range is too long
         // so this is probably some new reading and store it as new:

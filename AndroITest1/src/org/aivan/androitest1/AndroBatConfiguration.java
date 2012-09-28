@@ -25,7 +25,10 @@ public class AndroBatConfiguration {
 	static final String PREFERENCES_LEVEL = "level";
 
 	static final String PREFERENCES_DATE = "date";
+
+	static final String PREFERENCES_IS_CHARING = "isCharging";
 	
+
 	// Time constants:
 	static final long MS_PER_SECOND = 1000;
 	static final long MS_PER_MINUTE = MS_PER_SECOND * 60;

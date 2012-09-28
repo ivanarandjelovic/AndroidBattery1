@@ -243,4 +243,35 @@ public class HistoryDAO {
 		return result;
 	}
 
+	public long getLastBatteryDate() {
+		
+		long result = Long.MIN_VALUE;
+		
+		SQLiteDatabase histDB = dbHelper.getReadableDatabase();
+		Cursor cursor = histDB.query(HISTORY_TABLE_NAME,
+				HistoryDBOpenerHelper.HISTORY_COLUMNS, "", null, null, null,
+				HistoryDBOpenerHelper.HISTORY_COLUMN_DATE + " desc", "1");
+		if (cursor != null && cursor.moveToFirst()) {
+			result = cursor.getLong(cursor
+					.getColumnIndex(HISTORY_COLUMN_DATE));
+
+			cursor.close();
+		}
+		histDB.close();
+		return result;
+	}
+
+	public void updateLastHistoryRecordTime(long time) {
+		long lastTime = getLastBatteryDate();
+		
+		SQLiteDatabase histDB = dbHelper.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(HISTORY_COLUMN_DATE, time);
+		
+		histDB.update(HISTORY_TABLE_NAME, values, HISTORY_COLUMN_DATE + " = "+lastTime, null);
+		histDB.close();
+		
+	}
+
 }

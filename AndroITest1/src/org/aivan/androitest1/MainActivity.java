@@ -1,7 +1,6 @@
 package org.aivan.androitest1;
 
 import java.text.DecimalFormat;
-import java.util.logging.SimpleFormatter;
 
 import org.aivan.androitest1.db.HistoryDAO;
 import org.aivan.androitest1.stats.StatisticsPercentageBasic;
