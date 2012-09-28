@@ -23,276 +23,279 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	static String className = MainActivity.class.getName();
+  static String className = MainActivity.class.getName();
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d(className, "onCreate called");
-		setContentView(R.layout.activity_main);
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Log.d(className, "onCreate called ");
+    setContentView(R.layout.activity_main);
 
-		// This is the good place to start our service, in case it's not started
-		// yet:
-		startIvanService();
-		
-//		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
-//        * AndroBatConfiguration.MS_PER_SECOND, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
-//        * AndroBatConfiguration.MS_PER_SECOND,
-//        PendingIntent.getBroadcast(this, 0, new Intent(this, AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT));
-	}
+    // This is the good place to start our service, in case it's not started
+    // yet:
+    startIvanService();
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.d(className, "onCreateOptionsMenu called");
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
+    // AlarmManager alarmManager = (AlarmManager)
+    // getSystemService(Context.ALARM_SERVICE);
+    // alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+    // AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+    // * AndroBatConfiguration.MS_PER_SECOND,
+    // AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+    // * AndroBatConfiguration.MS_PER_SECOND,
+    // PendingIntent.getBroadcast(this, 0, new Intent(this,
+    // AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT));
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onRestoreInstanceState(savedInstanceState);
-		Log.d(className, "onRestoreInstanceState called");
-	}
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    Log.d(className, "onCreateOptionsMenu called");
+    getMenuInflater().inflate(R.menu.activity_main, menu);
+    return true;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
-		super.onSaveInstanceState(outState);
-		Log.d(className, "onSaveInstanceState called");
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onRestoreInstanceState(android.os.Bundle)
+   */
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    // TODO Auto-generated method stub
+    super.onRestoreInstanceState(savedInstanceState);
+    Log.d(className, "onRestoreInstanceState called");
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onDestroy()
-	 */
-	@Override
-	protected void onDestroy() {
-//	  AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//    alarmManager.cancel(PendingIntent.getActivity(this, 0, new Intent(this, AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT));
-//    
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		Log.d(className, "onDestroy called");
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+   */
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    // TODO Auto-generated method stub
+    super.onSaveInstanceState(outState);
+    Log.d(className, "onSaveInstanceState called");
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		Log.d(className, "onPause called");
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onDestroy()
+   */
+  @Override
+  protected void onDestroy() {
+    // AlarmManager alarmManager = (AlarmManager)
+    // getSystemService(Context.ALARM_SERVICE);
+    // alarmManager.cancel(PendingIntent.getActivity(this, 0, new Intent(this,
+    // AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT));
+    //
+    // TODO Auto-generated method stub
+    super.onDestroy();
+    Log.d(className, "onDestroy called");
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onRestart()
-	 */
-	@Override
-	protected void onRestart() {
-		// TODO Auto-generated method stub
-		super.onRestart();
-		Log.d(className, "onRestart called");
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onPause()
+   */
+  @Override
+  protected void onPause() {
+    // TODO Auto-generated method stub
+    super.onPause();
+    Log.d(className, "onPause called");
+  }
 
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onRestart()
+   */
+  @Override
+  protected void onRestart() {
+    // TODO Auto-generated method stub
+    super.onRestart();
+    Log.d(className, "onRestart called");
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		Log.d(className, "onResume called");
+  }
 
-		refreshServiceRunningStatus();
-		calculatePrediction();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onResume()
+   */
+  @Override
+  protected void onResume() {
+    // TODO Auto-generated method stub
+    super.onResume();
+    Log.d(className, "onResume called");
 
-	private void refreshServiceRunningStatus() {
-		boolean serviceRunning = ServiceTools.isServiceRunning(this,
-				"org.aivan.androitest1.IvanService");
+    refreshServiceRunningStatus();
+    calculatePrediction();
+  }
 
-		TextView textView = (TextView) findViewById(R.id.textView1);
-		textView.setText("Service is " + (serviceRunning ? "" : "not ")
-				+ " running");
+  private void refreshServiceRunningStatus() {
+    boolean serviceRunning = ServiceTools.isServiceRunning(this, "org.aivan.androitest1.IvanService");
 
-		Button startServiceButton = (Button) findViewById(R.id.startService);
-		Button stopServiceButton = (Button) findViewById(R.id.stopService);
+    TextView textView = (TextView) findViewById(R.id.textView1);
+    textView.setText("Service is " + (serviceRunning ? "" : "not ") + " running");
 
-		startServiceButton.setEnabled((serviceRunning ? false : true));
-		stopServiceButton.setEnabled(!startServiceButton.isEnabled());
-	}
+    Button startServiceButton = (Button) findViewById(R.id.startService);
+    Button stopServiceButton = (Button) findViewById(R.id.stopService);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onStart()
-	 */
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		Log.d(className, "onStart called");
-	}
+    startServiceButton.setEnabled((serviceRunning ? false : true));
+    stopServiceButton.setEnabled(!startServiceButton.isEnabled());
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onStop()
-	 */
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		Log.d(className, "onStop called");
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onStart()
+   */
+  @Override
+  protected void onStart() {
+    // TODO Auto-generated method stub
+    super.onStart();
+    Log.d(className, "onStart called");
+  }
 
-	/** Called when the user clicks the Send button */
-	public void sendMessage(View view) {
-		// Do something in response to button
-		Intent intent = new Intent(this, Activity2.class);
-		startActivity(intent);
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see android.app.Activity#onStop()
+   */
+  @Override
+  protected void onStop() {
+    // TODO Auto-generated method stub
+    super.onStop();
+    Log.d(className, "onStop called");
+  }
 
-	/** Called when the user clicks the Send button */
-	public void startService(View view) {
-		// Do something in response to button
-		Log.d(className, "startService");
+  /** Called when the user clicks the Send button */
+  public void sendMessage(View view) {
+    // Do something in response to button
+    Intent intent = new Intent(this, Activity2.class);
+    startActivity(intent);
+  }
 
-		startIvanService();
+  /** Called when the user clicks the Send button */
+  public void startService(View view) {
+    // Do something in response to button
+    Log.d(className, "startService");
 
-		refreshServiceRunningStatus();
-	}
+    startIvanService();
 
-	private void startIvanService() {
-		Intent intent = new Intent(this, IvanService.class);
-		startService(intent);
-	}
+    refreshServiceRunningStatus();
+  }
 
-	public void stopService(View view) {
-		// Do something in response to button
-		Log.d(className, "stopService");
+  private void startIvanService() {
+    Intent intent = new Intent(this, IvanService.class);
+    startService(intent);
+  }
 
-		Intent intent = new Intent(this, IvanService.class);
-		stopService(intent);
+  public void stopService(View view) {
+    // Do something in response to button
+    Log.d(className, "stopService");
 
-		refreshServiceRunningStatus();
-	}
+    Intent intent = new Intent(this, IvanService.class);
+    stopService(intent);
 
-	public void dataCleanup(View view) {
-		Log.d(className, "dataCleanup");
+    refreshServiceRunningStatus();
+  }
 
-		new HistoryDAO(this).performDataCleanup();
+  public void dataCleanup(View view) {
+    Log.d(className, "dataCleanup");
 
-		Toast.makeText(this, "Data cleanup complete!", Toast.LENGTH_LONG)
-				.show();
-	}
+    new HistoryDAO(this).performDataCleanup();
 
-	static StatisticsPercentageBasic stats = new StatisticsPercentageBasic();
+    Toast.makeText(this, "Data cleanup complete!", Toast.LENGTH_LONG).show();
+  }
 
-	public void recalculateStats(View view) {
-		Log.d(className, "recalculateStats");
-		
-		new HistoryDAO(this).performDataCleanup();
+  static StatisticsPercentageBasic stats = new StatisticsPercentageBasic();
 
-		recalculateStatistics(this);
+  public void recalculateStats(View view) {
+    Log.d(className, "recalculateStats");
 
-		Toast.makeText(this, "Statistics recalculated and stored!", Toast.LENGTH_SHORT).show();
+    new HistoryDAO(this).performDataCleanup();
 
-		Log.d(className, "Statistics dump:\n" + stats.dump(this));
-	}
+    recalculateStatistics(this);
 
-	static protected void recalculateStatistics(Context context) {
-		Log.d(className, "recalculateStatistics called");
-		
-		stats = new StatisticsPercentageBasic();
+    Toast.makeText(this, "Statistics recalculated and stored!", Toast.LENGTH_SHORT).show();
 
-		HistoryDAO historyDao = new HistoryDAO(context);
+    Log.d(className, "Statistics dump:\n" + stats.dump(this));
+  }
 
-		historyDao.iterateRecords(stats);
-		stats.fillTheblanks();
+  static protected void recalculateStatistics(Context context) {
+    Log.d(className, "recalculateStatistics called");
 
-		stats.store(historyDao);
-	}
+    stats = new StatisticsPercentageBasic();
 
-	public void calculatePrediction(View view) {
-		calculatePrediction();
+    HistoryDAO historyDao = new HistoryDAO(context);
 
-	}
+    historyDao.iterateRecords(stats);
+    stats.fillTheblanks();
 
-	private void calculatePrediction() {
-		Log.d(className, "calculatePrediction");
+    stats.store(historyDao);
+  }
 
-		String remainingTime = getPrediction(this);
+  public void calculatePrediction(View view) {
+    calculatePrediction();
 
-		TextView textView = (TextView) findViewById(R.id.textView2);
-		if (remainingTime != null) {
+  }
 
-			textView.setText(remainingTime);
-		} else {
-			textView.setText("Estimate is: N/A");
+  private void calculatePrediction() {
+    Log.d(className, "calculatePrediction");
 
-		}
-	}
+    String remainingTime = getPrediction(this);
 
-	static protected String getPrediction(Context context) {
-		stats = new StatisticsPercentageBasic();
+    TextView textView = (TextView) findViewById(R.id.textView2);
+    if (remainingTime != null) {
 
-		HistoryDAO historyDao = new HistoryDAO(context);
+      textView.setText(remainingTime);
+    } else {
+      textView.setText("Estimate is: N/A");
 
-		stats.load(historyDao);
+    }
+  }
 
-		int lastLevel = historyDao.getLastBatteryLevel();
-		long lastTime = historyDao.getLastBatteryDate();
+  static protected String getPrediction(Context context) {
+    stats = new StatisticsPercentageBasic();
 
-		long remainingTime = stats.estimateForLevel(lastLevel);
+    HistoryDAO historyDao = new HistoryDAO(context);
 
-		// Reduce for time passed since last level change
-		remainingTime -= (System.currentTimeMillis() - lastTime);
+    stats.load(historyDao);
 
-		if (remainingTime > 0) {
+    int lastLevel = historyDao.getLastBatteryLevel();
+    long lastTime = historyDao.getLastBatteryDate();
 
-			long days = remainingTime / AndroBatConfiguration.MS_PER_DAY;
-			remainingTime = remainingTime % AndroBatConfiguration.MS_PER_DAY;
+    long remainingTime = stats.estimateForLevel(lastLevel);
 
-			long hours = remainingTime / AndroBatConfiguration.MS_PER_HOUR;
-			remainingTime = remainingTime % AndroBatConfiguration.MS_PER_HOUR;
+    if (remainingTime != Long.MIN_VALUE) {
+      // Reduce for time passed since last level change
+      remainingTime -= (System.currentTimeMillis() - lastTime);
 
-			long minutes = remainingTime / AndroBatConfiguration.MS_PER_MINUTE;
-			remainingTime = remainingTime % AndroBatConfiguration.MS_PER_MINUTE;
+      if (remainingTime < 0) {
+        remainingTime = 0;
+      }
 
-			if (remainingTime > 30 * AndroBatConfiguration.MS_PER_SECOND) {
-				minutes++;
-			}
+      long days = remainingTime / AndroBatConfiguration.MS_PER_DAY;
+      remainingTime = remainingTime % AndroBatConfiguration.MS_PER_DAY;
 
-			DecimalFormat df = new DecimalFormat("00");
-			return ((days > 0 ? days + " days " : "") + df.format(hours) + ":" + df
-					.format(minutes));
-		} else {
-			return null;
-		}
-	}
+      long hours = remainingTime / AndroBatConfiguration.MS_PER_HOUR;
+      remainingTime = remainingTime % AndroBatConfiguration.MS_PER_HOUR;
 
+      long minutes = remainingTime / AndroBatConfiguration.MS_PER_MINUTE;
+      remainingTime = remainingTime % AndroBatConfiguration.MS_PER_MINUTE;
 
-  
+      if (remainingTime > 30 * AndroBatConfiguration.MS_PER_SECOND) {
+        minutes++;
+      }
+
+      DecimalFormat df = new DecimalFormat("00");
+      return ((days > 0 ? days + " days " : "") + df.format(hours) + ":" + df.format(minutes));
+    } else {
+      return null;
+    }
+  }
+
 }

@@ -133,6 +133,9 @@ public class IvanService extends Service {
           // unloaded
           saveLevelToPreferences(context, level, time);
 
+          // record this a bit earlier since notification update relies on it
+          lastLevel = level;
+
           updateNotificationIcon();
 
         }
