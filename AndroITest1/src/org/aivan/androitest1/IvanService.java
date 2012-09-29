@@ -35,11 +35,11 @@ public class IvanService extends Service {
 
     registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
-    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-    alarmManager.setRepeating(AlarmManager.RTC, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
-        * AndroBatConfiguration.MS_PER_MINUTE, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
-        * AndroBatConfiguration.MS_PER_MINUTE,
-        PendingIntent.getService(this, 0, new Intent(this, IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT));
+//    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//    alarmManager.setRepeating(AlarmManager.RTC, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+//        * AndroBatConfiguration.MS_PER_MINUTE, AndroBatConfiguration.ESTIMATE_UPDATE_INTERVAL_IN_MINUTES
+//        * AndroBatConfiguration.MS_PER_MINUTE,
+//        PendingIntent.getService(this, 0, new Intent(this, IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT));
 
   }
 
@@ -86,8 +86,8 @@ public class IvanService extends Service {
     super.onDestroy();
     Log.d(TAG, "onDestroy");
 
-    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-    alarmManager.cancel(PendingIntent.getService(this, 0, new Intent(this, IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT));
+//    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//    alarmManager.cancel(PendingIntent.getService(this, 0, new Intent(this, IvanService.class), PendingIntent.FLAG_UPDATE_CURRENT));
 
     cancelNotificationIcon();
 
