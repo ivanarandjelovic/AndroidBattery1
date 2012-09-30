@@ -230,7 +230,7 @@ public class IvanService extends Service {
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     // TODO Auto-generated method stub
-    Log.d(TAG, "onStartCommand");
+    Log.d(TAG, "onStartCommand (or alarm event)");
     return super.onStartCommand(intent, flags, startId);
   }
 
